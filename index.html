@@ -320,13 +320,13 @@
                             <span class="w-4 h-4 flex-shrink-0 flex items-center justify-center text-[8px] font-black bg-slate-800 text-slate-500 rounded-md">${i+1}</span>
                             <span class="text-slate-100 font-bold truncate max-w-[240px]">${s.subject}</span>
                         </div>
-                        <span class="text-[9px] font-bold text-slate-500 flex-shrink-0 italic">${s.date}</span>
+                       <span class="text-[11px] font-bold text-white flex-shrink-0 italic">${s.date}</span>
                     </div>
                 `).join('');
 
             row.innerHTML = `
                 <td class="px-8 py-5"><span class="text-slate-200 font-black text-sm tracking-tight">${accName}</span></td>
-                <td class="px-8 py-5"><span class="text-indigo-400/70 font-mono text-[10px] font-black">${domain}</span></td>
+               <td class="px-8 py-5"><span class="text-white font-mono text-xs font-black">${domain}</span></td>
                 <td class="px-8 py-5">${subjectsHtml}</td>
                 <td class="px-8 py-5 text-right">${statusHtml}</td>
             `;
