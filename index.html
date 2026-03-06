@@ -68,7 +68,26 @@
                 <p class="text-slate-400 text-base font-medium">Extracting last 3 subject lines across 11 accounts.</p>
             </div>
         </header>
-
+ <section id="common-section" class="hidden w-full pb-16 animate-slide">
+                <div class="bg-gradient-to-r from-[#0b0f1a] to-[#0f1425] border-t-2 border-indigo-500/60 rounded-[2.5rem] p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-grow w-full">
+                        <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-4 block">IDENTIFIED COMMON SUBJECT</label>
+                        <div class="relative group">
+                            <input id="common-subject-input" readonly
+                                class="w-full bg-[#020617] border border-indigo-500/20 rounded-2xl py-5 px-6 text-white font-bold text-lg focus:outline-none"
+                                placeholder="Waiting for data sync...">
+                            <button id="copy-btn" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 p-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-all shadow-lg">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-40 flex flex-col items-center justify-center p-6 bg-indigo-500/5 rounded-3xl border border-indigo-500/10">
+                        <span class="text-[10px] text-indigo-300 font-black mb-1 uppercase tracking-widest">Match Rate</span>
+                        <span id="match-percent" class="text-3xl font-black text-indigo-400 italic">0%</span>
+                    </div>
+                </div>
+            </section>
         <div class="flex flex-col gap-8">
             <!-- TOP: Target Entry -->
             <section class="w-full">
@@ -133,26 +152,7 @@
             </section>
 
             <!-- BOTTOM: Commonality Detection -->
-            <section id="common-section" class="hidden w-full pb-16 animate-slide">
-                <div class="bg-gradient-to-r from-[#0b0f1a] to-[#0f1425] border-t-2 border-indigo-500/60 rounded-[2.5rem] p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
-                    <div class="flex-grow w-full">
-                        <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-4 block">IDENTIFIED COMMON SUBJECT</label>
-                        <div class="relative group">
-                            <input id="common-subject-input" readonly
-                                class="w-full bg-[#020617] border border-indigo-500/20 rounded-2xl py-5 px-6 text-white font-bold text-lg focus:outline-none"
-                                placeholder="Waiting for data sync...">
-                            <button id="copy-btn" 
-                                class="absolute right-3 top-1/2 -translate-y-1/2 p-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-all shadow-lg">
-                                <i class="fa-solid fa-copy"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-40 flex flex-col items-center justify-center p-6 bg-indigo-500/5 rounded-3xl border border-indigo-500/10">
-                        <span class="text-[10px] text-indigo-300 font-black mb-1 uppercase tracking-widest">Match Rate</span>
-                        <span id="match-percent" class="text-3xl font-black text-indigo-400 italic">0%</span>
-                    </div>
-                </div>
-            </section>
+           
         </div>
     </main>
 
