@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSG43 INBOXING | Intelligence Hub</title>
+    <title>JSG43 INBOXING | Doraemon Gadget Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            /* Hide real cursor to let the bamboo copter take over */
+            cursor: none !important;
+        }
+        
+        /* Make sure all interactive elements hide default cursor too */
+        a, button, input, textarea, select, [role="button"], th, td {
+            cursor: none !important;
+        }
+
         /* Custom Scrollbars */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #071524; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #00A0E9; border-radius: 10px; }
         
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -30,73 +40,250 @@
             content: "";
             position: absolute;
             top: 0; right: 0; bottom: 0; left: 0;
-            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 160, 233, 0.15), transparent);
             animation: shimmer 2s infinite;
+        }
+
+        /* Bamboocopter Custom Cursor Styles */
+        #bamboocopter-cursor {
+            position: fixed;
+            pointer-events: none;
+            width: 50px;
+            height: 50px;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            display: none;
+            transition: width 0.2s, height 0.2s;
+        }
+        
+        @keyframes propeller-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .propeller-blade {
+            transform-origin: 25px 8px;
+            animation: propeller-spin 0.2s linear infinite;
+        }
+
+        /* Fast spin on hover state */
+        .hover-active .propeller-blade {
+            animation: propeller-spin 0.06s linear infinite;
+        }
+
+        /* Clouds Float Animation for Doraemon Theme Background */
+        @keyframes floatCloud {
+            0% { transform: translateX(-10%) translateY(0px); }
+            50% { transform: translateX(5%) translateY(-10px); }
+            100% { transform: translateX(-10%) translateY(0px); }
+        }
+        .cloud-bg-1 {
+            animation: floatCloud 25s ease-in-out infinite;
+        }
+        .cloud-bg-2 {
+            animation: floatCloud 35s ease-in-out infinite;
+        }
+
+        /* 3D Anywhere Door Perspective Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .door-open-animation {
+            transform: rotateY(-130deg);
         }
     </style>
 </head>
-<body class="bg-[#020617] text-slate-200 min-h-screen selection:bg-indigo-500/30 overflow-x-hidden custom-scrollbar">
+<body class="bg-[#030d1a] text-slate-200 min-h-screen selection:bg-[#00A0E9]/30 overflow-x-hidden custom-scrollbar relative">
+
+    <!-- Bamboocopter Cursor -->
+    <div id="bamboocopter-cursor">
+        <svg viewBox="0 0 50 50" width="100%" height="100%">
+            <!-- Propeller Shaft -->
+            <rect x="24" y="8" width="2" height="15" fill="#f8fafc" />
+            <!-- Connection base / yellow hat suction cup -->
+            <path d="M 20 23 Q 25 18 30 23 Z" fill="#FFD400" stroke="#b45309" stroke-width="0.5" />
+            <ellipse cx="25" cy="23" rx="5" ry="2" fill="#E60012" />
+            <!-- Propeller Blades (Spins via CSS) -->
+            <g class="propeller-blade">
+                <ellipse cx="25" cy="8" rx="2" ry="2" fill="#334155" />
+                <path d="M 25 8 L 5 6 C 12 2, 25 7, 25 8 Z" fill="#FFD400" opacity="0.9" />
+                <path d="M 25 8 L 45 6 C 38 2, 25 7, 25 8 Z" fill="#FFD400" opacity="0.9" />
+            </g>
+        </svg>
+    </div>
+
+    <!-- Background clouds & gadgets silhouettes for Doraemon look -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-10">
+        <!-- Floating Cloud 1 -->
+        <svg class="cloud-bg-1 absolute top-20 left-10 w-80 text-white fill-current" viewBox="0 0 100 100">
+            <path d="M10 50 C10 35, 30 35, 35 40 C40 30, 60 30, 65 38 C75 30, 90 35, 90 50 C95 55, 95 70, 80 70 L20 70 C5 70, 5 55, 10 50 Z" />
+        </svg>
+        <!-- Floating Cloud 2 -->
+        <svg class="cloud-bg-2 absolute top-[60vh] right-10 w-96 text-white fill-current" viewBox="0 0 100 100">
+            <path d="M10 50 C10 35, 30 35, 35 40 C40 30, 60 30, 65 38 C75 30, 90 35, 90 50 C95 55, 95 70, 80 70 L20 70 C5 70, 5 55, 10 50 Z" />
+        </svg>
+    </div>
 
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-full w-72 bg-[#0b0f1a] border-r border-slate-800/40 p-8 flex flex-col gap-10 hidden lg:flex z-50">
+    <aside class="fixed left-0 top-0 h-full w-72 bg-[#051324] border-r border-[#00A0E9]/20 p-8 flex flex-col gap-8 hidden lg:flex z-50">
+        <!-- Doraemon Tech Brand Logo -->
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/20">
-                <i class="fa-solid fa-bolt-lightning text-white text-2xl"></i>
+            <div class="w-14 h-14 bg-gradient-to-br from-[#00A0E9] to-[#007cb8] rounded-2xl flex items-center justify-center shadow-xl shadow-[#00A0E9]/20 relative group overflow-visible">
+                <!-- Golden Bell Badge -->
+                <div class="absolute -top-1 -right-1 w-6 h-6 bg-[#FFD400] rounded-full border-2 border-[#051324] flex items-center justify-center shadow">
+                    <span class="text-[9px] text-amber-950 font-bold"><i class="fa-solid fa-bell animate-wiggle"></i></span>
+                </div>
+                <!-- Doraemon SVG Face inside logo box -->
+                <svg viewBox="0 0 100 100" class="w-10 h-10">
+                    <circle cx="50" cy="50" r="45" fill="#FFF" />
+                    <circle cx="50" cy="50" r="38" fill="#00A0E9" />
+                    <path d="M 20 58 C 20 32, 80 32, 80 58 C 80 80, 20 80, 20 58 Z" fill="#FFF" />
+                    <ellipse cx="42" cy="40" rx="8" ry="10" fill="#FFF" stroke="#1e293b" stroke-width="1.5" />
+                    <ellipse cx="58" cy="40" rx="8" ry="10" fill="#FFF" stroke="#1e293b" stroke-width="1.5" />
+                    <circle cx="44" cy="40" r="2.5" fill="#000" />
+                    <circle cx="56" cy="40" r="2.5" fill="#000" />
+                    <circle cx="50" cy="49" r="5" fill="#E60012" />
+                    <path d="M 35 62 Q 50 74 65 62" fill="none" stroke="#1e293b" stroke-width="2" />
+                </svg>
             </div>
             <div>
-                <h1 class="font-extrabold text-xl tracking-tighter text-white leading-none">JSG43</h1>
-                <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-indigo-400">Inboxing</p>
+                <h1 class="font-black text-xl tracking-tighter text-white leading-none">JSG43 LAB</h1>
+                <p class="text-[10px] uppercase tracking-[0.2em] font-extrabold text-[#00A0E9]">Pocket Inboxer</p>
             </div>
         </div>
 
         <nav class="flex flex-col gap-2">
-            <div class="text-[10px] uppercase font-bold text-slate-500 tracking-widest px-4 mb-4">Core Systems</div>
-            <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl bg-indigo-600 text-white shadow-xl shadow-indigo-600/30 transition-all">
-                <i class="fa-solid fa-microchip"></i>
-                <span class="font-bold text-sm tracking-tight">Subject Extractor</span>
+            <div class="text-[10px] uppercase font-black text-slate-500 tracking-widest px-4 mb-2">Pocket Gadgets</div>
+            
+            <a href="#" class="flex items-center gap-4 px-5 py-4 rounded-2xl bg-[#00A0E9] text-white shadow-lg shadow-[#00A0E9]/30 transition-all">
+                <i class="fa-solid fa-door-open text-base"></i>
+                <span class="font-bold text-sm tracking-tight">Anywhere Portal</span>
             </a>
-            <a href="#common-section" class="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-slate-800/50 text-slate-400 transition-all border border-transparent hover:border-slate-700/50">
-                <i class="fa-solid fa-chart-line"></i>
-                <span class="font-bold text-sm tracking-tight">Deliverability Stats</span>
+            
+            <a href="#common-section" class="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-[#00A0E9]/10 text-slate-300 transition-all border border-transparent hover:border-[#00A0E9]/20">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span class="font-bold text-sm tracking-tight">Time Machine Stats</span>
             </a>
         </nav>
 
-        <div class="mt-auto p-6 bg-slate-900/40 rounded-3xl border border-slate-800/40">
+        <!-- Cute Doraemon & Nobita Status Widget -->
+        <div class="p-4 bg-[#07192e] rounded-3xl border border-[#00A0E9]/10 flex flex-col gap-3 relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-16 h-16 opacity-15">
+                <i class="fa-solid fa-robot text-5xl text-[#00A0E9]"></i>
+            </div>
+            <div class="flex items-center gap-2">
+                <!-- Mini Doraemon Head SVG -->
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <circle cx="50" cy="50" r="45" fill="#00A0E9" />
+                    <path d="M 18 55 C 18 30, 82 30, 82 55 C 82 78, 18 78, 18 55 Z" fill="#FFF" />
+                    <ellipse cx="42" cy="38" rx="8" ry="10" fill="#FFF" stroke="#000" stroke-width="1.5" />
+                    <ellipse cx="58" cy="38" rx="8" ry="10" fill="#FFF" stroke="#000" stroke-width="1.5" />
+                    <circle cx="44" cy="38" r="2" fill="#000" />
+                    <circle cx="56" cy="38" r="2" fill="#000" />
+                    <circle cx="50" cy="46" r="4" fill="#E60012" />
+                    <line x1="50" y1="50" x2="50" y2="65" stroke="#000" stroke-width="1.5" />
+                    <path d="M 35 60 Q 50 72 65 60" fill="none" stroke="#000" stroke-width="1.5" />
+                </svg>
+                <span class="text-[10px] font-black text-white tracking-widest uppercase">Gadget Status</span>
+            </div>
+            <div class="text-[11px] text-slate-400">
+                "Checking inbox sync vectors with 22nd-century precision!"
+            </div>
+        </div>
+
+        <div class="mt-auto p-5 bg-[#030d1a] rounded-3xl border border-[#00A0E9]/10">
             <p class="text-[10px] text-slate-500 mb-3 uppercase tracking-[0.15em] font-black">Active Nodes</p>
             <div class="space-y-3">
                 <div class="flex items-center justify-between text-xs font-bold">
                     <span class="text-slate-400">Google API</span>
-                    <span class="text-emerald-500 flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        ONLINE
+                    <span class="text-emerald-400 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        CONNECTED
                     </span>
                 </div>
                 <div class="flex items-center justify-between text-xs font-bold">
-                    <span class="text-slate-400">Accounts</span>
-                    <span id="sidebar-accounts-count" class="text-white">12 Loaded</span>
+                    <span class="text-slate-400">Nodes</span>
+                    <span id="sidebar-accounts-count" class="text-[#FFD400]">12 Loaded</span>
                 </div>
             </div>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="lg:ml-72 p-6 md:p-12 max-w-6xl mx-auto">
-        <header class="mb-10">
-            <h2 class="text-4xl font-black text-white tracking-tight mb-2">Subject & Delivery <span class="text-indigo-500">Hub</span></h2>
-            <p class="text-slate-400 text-base font-medium">Extracting last 3 subject lines, timestamps, and folders across <span id="header-accounts-count" class="text-indigo-400 font-bold">12</span> master accounts.</p>
+    <main class="lg:ml-72 p-6 md:p-12 max-w-6xl mx-auto relative z-10">
+        
+        <!-- Header Section with Doraemon and Nobita Illustration Card -->
+        <header class="mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-gradient-to-r from-[#051324] to-[#071e36] p-8 rounded-[2.5rem] border border-[#00A0E9]/20 relative overflow-hidden">
+            <!-- Background highlight -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#00A0E9]/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="space-y-2 max-w-xl">
+                <div class="flex items-center gap-2">
+                    <span class="bg-[#E60012] text-white text-[9px] font-black tracking-widest px-2.5 py-1 rounded-full uppercase">JSG43 Secret Gadget</span>
+                    <span class="bg-[#FFD400]/20 text-[#FFD400] text-[9px] font-black tracking-widest px-2.5 py-1 rounded-full uppercase">Take-Copter Enabled</span>
+                </div>
+                <h2 class="text-4xl font-black text-white tracking-tight">Anywhere Inbox <span class="text-[#00A0E9]">Door</span></h2>
+                <p class="text-slate-400 text-sm font-medium">Extracting last 3 subject lines, timestamps, and folders across <span id="header-accounts-count" class="text-[#FFD400] font-black">12</span> monitored nodes.</p>
+            </div>
+
+            <!-- Beautiful inline Doraemon & Nobita side-by-side Avatar Illustration -->
+            <div class="flex items-center gap-4 bg-[#030d1a]/60 p-4 rounded-3xl border border-[#00A0E9]/15">
+                <!-- Doraemon SVG -->
+                <div class="text-center">
+                    <svg viewBox="0 0 100 100" class="w-16 h-16 mx-auto hover:scale-105 transition-transform duration-300">
+                        <circle cx="50" cy="50" r="45" fill="#00A0E9" />
+                        <path d="M 15 55 C 15 25, 85 25, 85 55 C 85 80, 15 80, 15 55 Z" fill="#FFF" />
+                        <ellipse cx="40" cy="35" rx="9" ry="11" fill="#FFF" stroke="#1e293b" stroke-width="2" />
+                        <ellipse cx="60" cy="35" rx="9" ry="11" fill="#FFF" stroke="#1e293b" stroke-width="2" />
+                        <circle cx="43" cy="35" r="3.5" fill="#000" />
+                        <circle cx="57" cy="35" r="3.5" fill="#000" />
+                        <circle cx="50" cy="45" r="6" fill="#E60012" />
+                        <circle cx="48" cy="43" r="1.5" fill="#FFF" />
+                        <line x1="30" y1="52" x2="15" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="30" y1="57" x2="12" y2="57" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="30" y1="62" x2="15" y2="64" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="70" y1="52" x2="85" y2="50" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="70" y1="57" x2="88" y2="57" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="70" y1="62" x2="85" y2="64" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="50" y1="51" x2="50" y2="68" stroke="#1e293b" stroke-width="1.5" />
+                        <path d="M 32 60 Q 50 80 68 60" fill="none" stroke="#1e293b" stroke-width="2" />
+                    </svg>
+                    <span class="text-[9px] font-black tracking-widest text-[#00A0E9] block mt-1 uppercase">Doraemon</span>
+                </div>
+                
+                <div class="w-px h-12 bg-slate-800"></div>
+
+                <!-- Nobita SVG -->
+                <div class="text-center">
+                    <svg viewBox="0 0 100 100" class="w-16 h-16 mx-auto hover:scale-105 transition-transform duration-300">
+                        <path d="M 15 50 C 15 12, 85 12, 85 50 C 85 45, 75 35, 50 38 C 25 35, 15 45, 15 50 Z" fill="#2d2d2d" />
+                        <path d="M 20 50 C 20 82, 80 82, 80 50 C 80 40, 20 40, 20 50 Z" fill="#FFE5C4" />
+                        <path d="M 18 48 Q 30 42 45 47 Q 60 40 82 48 Q 80 30 50 25 Q 20 30 18 48 Z" fill="#2d2d2d" />
+                        <circle cx="35" cy="52" r="11" fill="none" stroke="#1e293b" stroke-width="2" />
+                        <circle cx="65" cy="52" r="11" fill="none" stroke="#1e293b" stroke-width="2" />
+                        <line x1="46" y1="52" x2="54" y2="52" stroke="#1e293b" stroke-width="2" />
+                        <circle cx="35" cy="52" r="2.5" fill="#000" />
+                        <circle cx="65" cy="52" r="2.5" fill="#000" />
+                        <path d="M 26 36 Q 35 32 42 37" fill="none" stroke="#1e293b" stroke-width="1.5" />
+                        <path d="M 58 37 Q 65 32 74 36" fill="none" stroke="#1e293b" stroke-width="1.5" />
+                        <path d="M 40 68 Q 50 74 60 68" fill="none" stroke="#1e293b" stroke-width="2" />
+                    </svg>
+                    <span class="text-[9px] font-black tracking-widest text-[#FFD400] block mt-1 uppercase">Nobita</span>
+                </div>
+            </div>
         </header>
 
         <!-- TOP: Commonality Detection & Action triggers -->
         <section id="common-section" class="hidden w-full pb-10">
-            <div class="w-full bg-gradient-to-r from-[#0b0f1a] to-[#0f1425] border-t-2 border-indigo-500/60 rounded-[2.5rem] p-8 shadow-2xl flex flex-col justify-between gap-6">
+            <div class="w-full bg-gradient-to-r from-[#051324] to-[#071e36] border-t-2 border-[#00A0E9] rounded-[2.5rem] p-8 shadow-2xl flex flex-col justify-between gap-6">
                 <div>
-                    <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2 block">IDENTIFIED COMMON SUBJECT</label>
+                    <label class="text-[10px] font-black text-[#FFD400] uppercase tracking-widest mb-2 block">IDENTIFIED COMMON SUBJECT LINE</label>
                     <div class="relative group">
                         <input id="common-subject-input" readonly
-                            class="w-full bg-[#020617] border border-indigo-500/20 rounded-2xl py-4 pl-6 pr-16 text-white font-bold text-base focus:outline-none transition-all group-hover:border-indigo-500/40"
-                            placeholder="Analyzing data convergence...">
+                            class="w-full bg-[#030d1a] border border-[#00A0E9]/30 rounded-2xl py-4 pl-6 pr-16 text-white font-bold text-base focus:outline-none transition-all group-hover:border-[#00A0E9]/50"
+                            placeholder="Analyzing parallel timelines...">
                         <button id="copy-btn" 
-                            class="absolute right-2 top-1/2 -translate-y-1/2 p-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-all active:scale-90 shadow-lg shadow-indigo-600/30">
+                            class="absolute right-2 top-1/2 -translate-y-1/2 p-3.5 bg-[#00A0E9] hover:bg-[#007cb8] text-white rounded-xl transition-all active:scale-90 shadow-lg shadow-[#00A0E9]/30">
                             <i class="fa-solid fa-copy text-base"></i>
                         </button>
                     </div>
@@ -104,33 +291,40 @@
                 
                 <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
                     <div class="flex-grow">
-                        <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-2">Subject Match Convergence</span>
-                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
-                            <div id="match-bar" class="bg-indigo-500 h-full w-0 transition-all duration-500"></div>
+                        <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-2">Subject Sync Match Convergence</span>
+                        <div class="w-full bg-[#030d1a] h-3 rounded-full overflow-hidden border border-slate-800">
+                            <div id="match-bar" class="bg-gradient-to-r from-[#00A0E9] to-[#FFD400] h-full w-0 transition-all duration-500"></div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center px-6 py-3 bg-indigo-500/5 rounded-2xl border border-indigo-500/10 min-w-[100px]">
+                    <div class="flex items-center justify-center px-6 py-3 bg-[#00A0E9]/5 rounded-2xl border border-[#00A0E9]/10 min-w-[100px]">
                         <div class="text-center">
-                            <span class="text-[9px] text-indigo-300 font-black uppercase tracking-tighter block leading-none">Match Rate</span>
-                            <span id="match-percent" class="text-2xl font-black text-indigo-400 italic">0%</span>
+                            <span class="text-[9px] text-[#00A0E9] font-black uppercase tracking-tighter block leading-none">Match Rate</span>
+                            <span id="match-percent" class="text-2xl font-black text-[#FFD400] italic">0%</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Interactive Preview Trigger: Displayed only if mail landed in Muskan's Account -->
-                <div id="preview-trigger-container" class="hidden animate-slide mt-2 p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div id="preview-trigger-container" class="hidden animate-slide mt-2 p-5 bg-[#00A0E9]/5 rounded-2xl border border-[#00A0E9]/20 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 flex-shrink-0">
-                            <i class="fa-solid fa-circle-check text-lg"></i>
+                        <div class="w-12 h-12 rounded-xl bg-[#00A0E9]/15 flex items-center justify-center text-[#FFD400] flex-shrink-0">
+                            <!-- Golden Bell SVG Icon -->
+                            <svg viewBox="0 0 100 100" class="w-8 h-8">
+                                <circle cx="50" cy="50" r="40" fill="#FFD400" stroke="#b45309" stroke-width="2" />
+                                <circle cx="50" cy="35" r="8" fill="#475569" />
+                                <line x1="20" y1="46" x2="80" y2="46" stroke="#b45309" stroke-width="3" />
+                                <circle cx="50" cy="62" r="10" fill="#1e293b" />
+                                <line x1="50" y1="72" x2="50" y2="90" stroke="#1e293b" stroke-width="4" stroke-linecap="round" />
+                            </svg>
                         </div>
                         <div>
-                            <h5 id="preview-trigger-title" class="text-sm font-bold text-white leading-tight">Mail Detected in Muskan's Account</h5>
-                            <p id="preview-trigger-desc" class="text-[11px] text-slate-400">Payload verified. Preview is pulled strictly from <strong class="text-indigo-400">Muskan Sharma</strong> (musk9090) to inspect actual inbox layout.</p>
+                            <h5 id="preview-trigger-title" class="text-sm font-bold text-white leading-tight">Mail Detected inside the Pocket</h5>
+                            <p id="preview-trigger-desc" class="text-[11px] text-slate-400">Payload verified. Open the Anywhere Door strictly from <strong class="text-[#00A0E9]">Muskan Sharma</strong> (musk9090) to inspect actual inbox layouts.</p>
                         </div>
                     </div>
-                    <button id="show-preview-btn" class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-lg shadow-indigo-600/30 active:scale-95 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass-chart"></i>
-                        Show Mail Preview
+                    <button id="show-preview-btn" class="w-full sm:w-auto px-6 py-3 bg-[#E60012] hover:bg-[#c2000f] text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-lg shadow-[#E60012]/30 active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-door-open"></i>
+                        Open Anywhere Door Preview
                     </button>
                 </div>
             </div>
@@ -139,25 +333,25 @@
         <div class="flex flex-col gap-8">
             <!-- TOP: Target Domain Entry -->
             <section class="w-full">
-                <div class="bg-[#0b0f1a] border border-slate-800/60 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+                <div class="bg-[#051324] border border-[#00A0E9]/20 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
                     <div class="flex flex-col lg:flex-row gap-8 items-start relative z-10">
                         <div class="flex-grow w-full">
                             <div class="flex items-center justify-between mb-4">
-                                <label class="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Target Domains</label>
-                                <span class="text-[10px] bg-slate-800 text-slate-400 px-3 py-1 rounded-full font-bold">MULTIPLE INPUT ENABLED</span>
+                                <label class="text-xs font-black text-[#00A0E9] uppercase tracking-[0.2em]">Target Domains (Sender Node Maps)</label>
+                                <span class="text-[10px] bg-[#00A0E9]/10 text-[#FFD400] px-3 py-1 rounded-full font-extrabold border border-[#00A0E9]/20">22nd-CENTURY GATEWAY</span>
                             </div>
                             <textarea id="domain-input" 
-                                class="w-full h-36 bg-[#020617] border border-slate-800/80 rounded-2xl p-6 text-slate-200 placeholder:text-slate-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/40 transition-all resize-none text-sm font-mono leading-relaxed"
+                                class="w-full h-36 bg-[#030d1a] border border-[#00A0E9]/20 rounded-2xl p-6 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-[#00A0E9]/10 focus:border-[#00A0E9]/50 transition-all resize-none text-sm font-mono leading-relaxed"
                                 placeholder="example-sender.com&#10;delivery-node.net"></textarea>
                         </div>
                         <div class="w-full lg:w-72 lg:pt-8 flex flex-col gap-3">
                             <button id="sync-btn" 
-                                class="group w-full py-5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-2xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.97]">
+                                class="group w-full py-5 bg-[#00A0E9] hover:bg-[#007cb8] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-2xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl shadow-[#00A0E9]/20 active:scale-[0.97]">
                                 <i class="fa-solid fa-bolt-lightning group-hover:rotate-12 transition-transform"></i>
-                                <span class="tracking-widest uppercase">Sync Network</span>
+                                <span class="tracking-widest uppercase">Activate Pocket Sync</span>
                             </button>
-                            <button id="clear-btn" class="hidden w-full py-3 text-slate-500 hover:text-red-400 text-[10px] font-black transition-colors uppercase tracking-widest">
-                                <i class="fa-solid fa-trash-can mr-2"></i> Clear Workspace
+                            <button id="clear-btn" class="hidden w-full py-3 text-slate-500 hover:text-[#E60012] text-[10px] font-black transition-colors uppercase tracking-widest">
+                                <i class="fa-solid fa-trash-can mr-2"></i> Reset Lab Workspace
                             </button>
                         </div>
                     </div>
@@ -166,30 +360,37 @@
 
             <!-- MIDDLE: Network Feed with Active Spam Filtering control -->
             <section class="w-full">
-                <div class="bg-[#0b0f1a] border border-slate-800/60 rounded-[2.5rem] overflow-hidden shadow-2xl min-h-[450px] flex flex-col">
-                    <div class="px-8 py-6 border-b border-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/20">
+                <div class="bg-[#051324] border border-[#00A0E9]/20 rounded-[2.5rem] overflow-hidden shadow-2xl min-h-[450px] flex flex-col">
+                    <div class="px-8 py-6 border-b border-[#00A0E9]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#071a2e]/40">
                         <h3 class="text-base font-black text-white flex items-center gap-3 tracking-tight">
-                            DATA EXTRACTION FEED
-                            <div id="scan-progress" class="hidden h-1 w-32 bg-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-indigo-500 animate-[loading_2s_infinite]"></div>
+                            DATA EXTRACTION STREAM
+                            <div id="scan-progress" class="hidden h-1.5 w-32 bg-[#030d1a] rounded-full overflow-hidden">
+                                <div class="h-full bg-[#FFD400] animate-[loading_2s_infinite]"></div>
                             </div>
                         </h3>
                         
                         <!-- Toggle Button: Show/Hide Spam Emails dynamically -->
-                        <button id="toggle-spam-btn" class="hidden flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-800 text-xs font-black text-slate-400 hover:text-white hover:border-slate-700/60 rounded-xl transition-all active:scale-95">
+                        <button id="toggle-spam-btn" class="hidden flex items-center gap-2 px-4 py-2 bg-[#030d1a] border border-[#00A0E9]/20 text-xs font-black text-[#00A0E9] hover:text-[#FFD400] hover:border-[#FFD400]/40 rounded-xl transition-all active:scale-95">
                             <i id="toggle-spam-icon" class="fa-solid fa-eye-slash text-slate-500"></i>
                             <span id="toggle-spam-text">Show Spam Mails</span>
-                            <span id="spam-counter" class="bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded text-[10px]">0 Hidden</span>
+                            <span id="spam-counter" class="bg-[#E60012]/10 text-[#E60012] border border-[#E60012]/20 px-2 py-0.5 rounded text-[10px]">0 Hidden</span>
                         </button>
                     </div>
 
-                    <!-- Empty State -->
+                    <!-- Empty State: Custom illustration representing Doraemon looking into 4D Pocket -->
                     <div id="empty-state" class="flex-grow flex flex-col items-center justify-center py-24 text-center">
-                        <div class="w-20 h-20 bg-indigo-500/5 rounded-full flex items-center justify-center mb-6 border border-indigo-500/10">
-                            <i class="fa-solid fa-server text-3xl text-indigo-500/30"></i>
+                        <div class="w-24 h-24 bg-[#00A0E9]/5 rounded-full flex items-center justify-center mb-6 border border-[#00A0E9]/10 relative group">
+                            <!-- Doraemon Bell SVG -->
+                            <svg viewBox="0 0 100 100" class="w-16 h-16 opacity-30 group-hover:opacity-60 transition-opacity">
+                                <circle cx="50" cy="50" r="40" fill="#FFD400" />
+                                <circle cx="50" cy="35" r="8" fill="#475569" />
+                                <line x1="20" y1="46" x2="80" y2="46" stroke="#475569" stroke-width="3" />
+                                <circle cx="50" cy="62" r="10" fill="#1e293b" />
+                                <line x1="50" y1="72" x2="50" y2="90" stroke="#1e293b" stroke-width="4" stroke-linecap="round" />
+                            </svg>
                         </div>
-                        <h4 class="text-lg font-bold text-slate-400 mb-1">Awaiting Domain Sequence</h4>
-                        <p class="text-xs text-slate-600 font-bold uppercase tracking-widest">Input target to initiate sync</p>
+                        <h4 class="text-lg font-bold text-slate-400 mb-1">Awaiting Domain Input Sequence</h4>
+                        <p class="text-xs text-slate-600 font-black uppercase tracking-widest">Activate Anywhere Door coordinates to begin</p>
                     </div>
 
                     <!-- Feed Results Container -->
@@ -197,14 +398,14 @@
                         <div class="overflow-x-auto custom-scrollbar">
                             <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black border-b border-slate-800/60">
-                                        <th class="px-8 py-6">Identity</th>
-                                        <th class="px-8 py-6">Domain</th>
-                                        <th class="px-8 py-6">Inbox / Spam Subjects (Last 3)</th>
+                                    <tr class="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black border-b border-[#00A0E9]/10">
+                                        <th class="px-8 py-6">Node Identity</th>
+                                        <th class="px-8 py-6">Sender Domain</th>
+                                        <th class="px-8 py-6">Detected Inbox / Spam Subjects (Last 3)</th>
                                         <th class="px-8 py-6 text-right">Verification</th>
                                     </tr>
                                 </thead>
-                                <tbody id="results-body" class="divide-y divide-slate-800/40">
+                                <tbody id="results-body" class="divide-y divide-[#00A0E9]/10">
                                     <!-- Rows injected dynamically -->
                                 </tbody>
                             </table>
@@ -215,21 +416,29 @@
         </div>
     </main>
 
-    <!-- HIGH-FIDELITY SECURE MAIL PREVIEW MODAL -->
-    <div id="preview-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden opacity-0 transition-all duration-300">
-        <div class="bg-[#0b0f1a] border border-slate-800 w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] transform scale-95 transition-all duration-300">
+    <!-- HIGH-FIDELITY ANYWHERE DOOR PREVIEW MODAL -->
+    <div id="preview-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#030d1a]/85 backdrop-blur-md hidden opacity-0 transition-all duration-300">
+        <!-- Styled as Doraemon's Pink Anywhere Door -->
+        <div class="bg-[#051324] border-8 border-[#FF5A92] w-full max-w-4xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] transform scale-95 transition-all duration-300 relative">
+            
+            <!-- Structural Door Handle Design Element on Modal boundary to sell the Anywhere Door theme -->
+            <div class="absolute right-3 top-[45%] w-5 h-16 bg-[#FFD400] rounded-xl border border-yellow-600 shadow z-50 flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-yellow-800"></div>
+            </div>
+
             <!-- Modal Header -->
-            <div class="px-8 py-6 border-b border-slate-800/60 bg-slate-900/20 flex items-center justify-between">
+            <div class="px-8 py-6 border-b border-slate-800 bg-[#071a2e]/40 flex items-center justify-between">
                 <div>
-                    <span class="text-[10px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1 rounded-full font-black uppercase tracking-wider">Muskan Sharma Node Audit</span>
+                    <span class="text-[10px] bg-[#E60012]/15 text-[#E60012] border border-[#E60012]/30 px-3 py-1 rounded-full font-black uppercase tracking-wider">Anywhere Door: Node Portal</span>
                     <h3 id="modal-subject" class="text-lg font-black text-white mt-1.5 line-clamp-1">Email Subject</h3>
                 </div>
-                <button id="close-modal-btn" class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-white flex items-center justify-center transition-all">
+                <button id="close-modal-btn" class="w-10 h-10 rounded-full bg-[#030d1a] border border-[#00A0E9]/20 hover:bg-[#00A0E9]/20 hover:text-white flex items-center justify-center transition-all">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
+            
             <!-- Modal Metadata Panel -->
-            <div class="px-8 py-4 bg-slate-900/40 border-b border-slate-800/40 flex flex-wrap gap-4 items-center text-xs text-slate-400 font-semibold">
+            <div class="px-8 py-4 bg-[#071a2e]/20 border-b border-slate-800/40 flex flex-wrap gap-4 items-center text-xs text-slate-400 font-semibold">
                 <div class="flex items-center gap-2">
                     <span class="text-slate-500">Audited Node:</span>
                     <span id="modal-account" class="text-emerald-400 font-bold">musk9090 (Muskan Sharma)</span>
@@ -240,40 +449,153 @@
                     <span id="modal-time" class="text-white font-mono">Jun 8 @ 02:57 PM</span>
                 </div>
                 <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
-                <div class="flex items-center gap-1 bg-amber-500/15 text-amber-400 px-2 py-0.5 rounded text-[10px] font-bold">
-                    <i class="fa-solid fa-user-secret"></i> Unopened State Preserved
+                <div class="flex items-center gap-1 bg-[#FFD400]/15 text-[#FFD400] px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider">
+                    <i class="fa-solid fa-user-secret"></i> Target Inbox Preserved
                 </div>
             </div>
-            <!-- Modal Body Content (Decoded iFrame Viewport) -->
-            <div class="flex-grow overflow-y-auto p-8 bg-[#020617] relative min-h-[350px]">
-                <!-- fallback raw body layout -->
+            
+            <!-- Modal Body Content -->
+            <div class="flex-grow overflow-y-auto p-8 bg-slate-950 relative min-h-[350px]">
                 <div id="modal-body-fallback" class="hidden text-slate-300 whitespace-pre-wrap leading-relaxed font-mono text-sm"></div>
-                <!-- rich sandboxed viewport frame to isolate HTML content styles -->
                 <iframe id="modal-body-frame" class="w-full h-full min-h-[380px] border-0 rounded-2xl bg-white hidden" sandbox="allow-same-origin"></iframe>
             </div>
         </div>
     </div>
 
+    <!-- 100% INBOX CELEBRATION MODAL -->
+    <div id="celebration-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#030d1a]/95 backdrop-blur-md hidden opacity-0 transition-all duration-500">
+        <div class="relative w-full max-w-2xl bg-gradient-to-b from-[#051324] to-[#030d1a] border-4 border-[#00A0E9] rounded-[3rem] p-8 shadow-[0_0_50px_rgba(0,160,233,0.4)] overflow-hidden flex flex-col items-center text-center">
+            
+            <!-- Confetti Canvas Particle Layer -->
+            <canvas id="celebration-confetti" class="absolute inset-0 pointer-events-none w-full h-full rounded-[3rem]"></canvas>
+
+            <!-- Sparkling background elements -->
+            <div class="absolute -top-10 -left-10 w-40 h-40 bg-[#FFD400]/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-[#E60012]/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <h3 class="text-3xl font-black text-[#FFD400] tracking-widest uppercase mb-4 drop-shadow-md animate-bounce">
+                ✨ 100% CONVERGENCE! ✨
+            </h3>
+            <p class="text-slate-400 text-xs uppercase tracking-widest font-bold mb-4">All monitored nodes successfully hit the inbox!</p>
+
+            <!-- 3D Anywhere Door Interactive Element -->
+            <div class="perspective-1000 w-44 h-60 relative my-2 flex items-center justify-center">
+                <!-- Door Frame Outer Trim -->
+                <div class="absolute inset-0 border-[6px] border-[#FF5A92] rounded-xl shadow-2xl z-10 pointer-events-none"></div>
+                
+                <!-- Inner Door Opening Space (Revealing the magical convergence sky) -->
+                <div class="absolute inset-1.5 bg-gradient-to-tr from-sky-400 via-[#00A0E9] to-indigo-600 rounded-lg overflow-hidden flex flex-col items-center justify-center">
+                    <div class="w-16 h-16 rounded-full border-2 border-white/20 animate-ping absolute"></div>
+                    <span class="text-white font-extrabold text-sm tracking-widest drop-shadow z-0">100% INBOX</span>
+                    <span class="text-[#FFD400] text-[9px] font-black uppercase tracking-widest mt-1">Portal Active</span>
+                </div>
+
+                <!-- Door Panel (Swings backward using CSS 3D transforms) -->
+                <div id="celebration-door-panel" class="absolute inset-1.5 bg-[#FF5A92] border-2 border-[#e03d73] rounded-lg shadow-2xl transition-transform duration-1000 ease-out origin-left z-20 flex flex-col items-center justify-center">
+                    <!-- Door design details: brass handle -->
+                    <div class="absolute right-2 top-[48%] w-3.5 h-8 bg-[#FFD400] rounded-md border border-yellow-600 shadow flex items-center justify-center">
+                        <div class="w-1 h-1 rounded-full bg-yellow-800"></div>
+                    </div>
+                    <!-- Secret Bell Emblem on the closed door panel -->
+                    <svg viewBox="0 0 100 100" class="w-16 h-16 opacity-80">
+                        <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-dasharray="4 4" stroke-width="1.5" />
+                        <circle cx="50" cy="50" r="16" fill="#FFD400" />
+                        <line x1="38" y1="46" x2="62" y2="46" stroke="#b45309" stroke-width="1.5" />
+                        <circle cx="50" cy="56" r="4" fill="#1e293b" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Dialogue Speech Bubbles -->
+            <div class="flex flex-col md:flex-row items-center gap-6 mt-6 z-30 w-full justify-center">
+                <!-- Doraemon Dialog -->
+                <div class="flex flex-col items-center gap-2">
+                    <div class="relative bg-white text-slate-950 font-black text-[11px] px-4 py-2 rounded-2xl shadow-xl border-2 border-[#00A0E9] max-w-[190px] after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 after:-translate-x-1/2 after:border-t-[10px] after:border-t-white after:border-x-[8px] after:border-x-transparent">
+                        "100% Inbox! Let's open the Anywhere Door!"
+                    </div>
+                    <!-- Happy Doraemon celebrating SVG -->
+                    <svg viewBox="0 0 100 100" class="w-20 h-20 hover:scale-110 transition-transform">
+                        <circle cx="50" cy="50" r="45" fill="#00A0E9" />
+                        <path d="M 15 55 C 15 25, 85 25, 85 55 C 85 80, 15 80, 15 55 Z" fill="#FFF" />
+                        <ellipse cx="38" cy="35" rx="10" ry="12" fill="#FFF" stroke="#1e293b" stroke-width="2" />
+                        <ellipse cx="62" cy="35" rx="10" ry="12" fill="#FFF" stroke="#1e293b" stroke-width="2" />
+                        <!-- Laughing Eyes -->
+                        <path d="M 32 35 Q 38 28 44 35" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" />
+                        <path d="M 56 35 Q 62 28 68 35" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="50" cy="45" r="7" fill="#E60012" />
+                        <circle cx="47" cy="43" r="2" fill="#FFF" />
+                        <!-- Whiskers -->
+                        <line x1="28" y1="52" x2="12" y2="49" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="28" y1="57" x2="8" y2="57" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="28" y1="62" x2="12" y2="65" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="72" y1="52" x2="88" y2="49" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="72" y1="57" x2="92" y2="57" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="72" y1="62" x2="88" y2="65" stroke="#1e293b" stroke-width="1.5" />
+                        <line x1="50" y1="52" x2="50" y2="68" stroke="#1e293b" stroke-width="1.5" />
+                        <!-- Big Happy Laughing Mouth -->
+                        <path d="M 28 60 Q 50 85 72 60" fill="#E60012" stroke="#1e293b" stroke-width="2" />
+                        <path d="M 38 68 Q 50 82 62 68" fill="#FFD400" />
+                    </svg>
+                    <span class="text-[9px] font-black text-[#00A0E9] tracking-widest uppercase">Doraemon</span>
+                </div>
+
+                <!-- Nobita Dialog -->
+                <div class="flex flex-col items-center gap-2">
+                    <div class="relative bg-white text-slate-950 font-black text-[11px] px-4 py-2 rounded-2xl shadow-xl border-2 border-[#FFD400] max-w-[190px] after:content-[''] after:absolute after:bottom-[-10px] after:left-1/2 after:-translate-x-1/2 after:border-t-[10px] after:border-t-white after:border-x-[8px] after:border-x-transparent">
+                        "Unbelievable! All nodes are completely matched!"
+                    </div>
+                    <!-- Happy celebrating Nobita SVG -->
+                    <svg viewBox="0 0 100 100" class="w-20 h-20 hover:scale-110 transition-transform">
+                        <path d="M 15 50 C 15 12, 85 12, 85 50 C 85 45, 75 35, 50 38 C 25 35, 15 45, 15 50 Z" fill="#2d2d2d" />
+                        <path d="M 20 50 C 20 82, 80 82, 80 50 C 80 40, 20 40, 20 50 Z" fill="#FFE5C4" />
+                        <path d="M 18 48 Q 30 42 45 47 Q 60 40 82 48 Q 80 30 50 25 Q 20 30 18 48 Z" fill="#2d2d2d" />
+                        <!-- Happy squinty glass eyes -->
+                        <path d="M 24 50 Q 32 44 40 50 Q 32 56 24 50" fill="none" stroke="#1e293b" stroke-width="2" />
+                        <path d="M 60 50 Q 68 44 76 50 Q 68 56 60 50" fill="none" stroke="#1e293b" stroke-width="2" />
+                        <line x1="40" y1="50" x2="60" y2="50" stroke="#1e293b" stroke-width="2" />
+                        <!-- Laughing cheeks/mouth -->
+                        <path d="M 38 65 Q 50 78 62 65" fill="#E60012" stroke="#1e293b" stroke-width="2" />
+                        <!-- Cheerful eyebrows -->
+                        <path d="M 22 36 Q 32 28 40 33" fill="none" stroke="#1e293b" stroke-width="2" />
+                        <path d="M 60 33 Q 68 28 78 36" fill="none" stroke="#1e293b" stroke-width="2" />
+                    </svg>
+                    <span class="text-[9px] font-black text-[#FFD400] tracking-widest uppercase">Nobita</span>
+                </div>
+            </div>
+
+            <!-- Action buttons inside modal -->
+            <div class="flex gap-4 mt-8 z-30">
+                <button id="celebration-open-portal-btn" class="px-6 py-3.5 bg-[#E60012] hover:bg-[#c2000f] text-white font-black rounded-2xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#E60012]/30 active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-door-open"></i> Step Through Portal
+                </button>
+                <button id="celebration-close-btn" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-white font-black rounded-2xl text-xs uppercase tracking-wider transition-all active:scale-95">
+                    Dismiss
+                </button>
+            </div>
+
+        </div>
+    </div>
+
     <!-- NOTIFICATION BOX FOR FAILED MUSKAN PREVIEWS -->
     <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-12 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-rose-900/95 border border-rose-500/30 text-rose-100 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 font-semibold text-sm">
-            <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+        <div class="bg-[#E60012]/95 border border-[#E60012]/30 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 font-semibold text-sm">
+            <i class="fa-solid fa-triangle-exclamation text-[#FFD400] text-lg"></i>
             <div>
-                <p class="font-bold">Muskan's Node Sync Issue</p>
-                <p class="text-xs text-rose-300/80">This subject line was not retrieved from the musk9090 node or did not hit the inbox.</p>
+                <p class="font-black">Gadget Connection Interrupted</p>
+                <p class="text-xs text-red-100">Subject line not retrieved from musk9090 node or did not hit the target inbox.</p>
             </div>
         </div>
     </div>
 
     <script>
-       const CONFIG = {
+        const CONFIG = {
             clientId: "998810876365-jktr21ut1ojev3vh30r0bdt9vfbtooc4.apps.googleusercontent.com",
             clientSecret: "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",
             accounts: [
-              { name: "agkartik8429", token: "1//0gesjD1QK4L1rCgYIARAAGBASNwF-L9Ir-DFo5-uUhfAIpJ1Fqu7foJmdN_gNTlcl_6sHYhXNfka1hsIpZfV0tVIh3Yas92MFvA0" },
-                 { name: "liveseedforall", token: "1//0gNNNmMZrjuhzCgYIARAAGBASNwF-L9Ire_zIx2bbnlq3L0wEhELUUmAua3zMtZqCOrLz1RnSu3ZG9DDojjURxcmtEVHkObrknVY" },
+                { name: "agkartik8429", token: "1//0gesjD1QK4L1rCgYIARAAGBASNwF-L9Ir-DFo5-uUhfAIpJ1Fqu7foJmdN_gNTlcl_6sHYhXNfka1hsIpZfV0tVIh3Yas92MFvA0" },
+                { name: "liveseedforall", token: "1//0gNNNmMZrjuhzCgYIARAAGBASNwF-L9Ire_zIx2bbnlq3L0wEhELUUmAua3zMtZqCOrLz1RnSu3ZG9DDojjURxcmtEVHkObrknVY" },
                 { name: "agkar9090", token: "1//0gQeu8MkAUYg_CgYIARAAGBASNwF-L9IrmgY1f9Mw1VUva2vfXI0Lbh2HRmslJfIu2cALxPNS6QQBtq-B4LcKId-vFfB69ZJlZtI" },
-                 { name: "ashwinbetterinbox", token: "1//0gaBSbBHlfJDiCgYIARAAGBASNwF-L9IrignXj3WeCLd9hkymbenMDFvOhCZLk0RygSqPe2yFlQSsAsIoO7DoLEzXAfSuCkJOm-E" },
+                { name: "ashwinbetterinbox", token: "1//0gaBSbBHlfJDiCgYIARAAGBASNwF-L9IrignXj3WeCLd9hkymbenMDFvOhCZLk0RygSqPe2yFlQSsAsIoO7DoLEzXAfSuCkJOm-E" },
                 { name: "musk9090", token: "1//0grSCGJkLq3-iCgYIARAAGBASNwF-L9IrGQ6WKKnQqFsF3mdEby7w7_61P7gvzDJOnffzFYmb3IgglPuk6HbGoyPhYoU2DphePG0" },
                 { name: "liveseedacc", token: "1//0gjFxd6-S5Hp_CgYIARAAGBASNwF-L9IrZVm2MGQUcZWzEXMd_O9U386ObC549czcddU4yADXCp5douRWj5lAc-y2msVcQN9yotk" },
                 { name: "markanthony", token: "1//0gO8mn3pPxlyVCgYIARAAGBASNwF-L9Irn7uzxcpYEL6PfXBFi0W02XFgQapUoHrhW4ZjCdKlMMh9jkQUUtkD7a_yVk0u08QtiUQ" },
@@ -286,7 +608,7 @@
         };
 
         // Inject dynamic account metrics into headers and sidebars
-        document.getElementById('sidebar-accounts-count').textContent = `${CONFIG.accounts.length} Loaded`;
+        document.getElementById('sidebar-accounts-count').textContent = `${CONFIG.accounts.length} Nodes`;
         document.getElementById('header-accounts-count').textContent = CONFIG.accounts.length;
 
         const dom = {
@@ -321,11 +643,123 @@
             modalTime: document.getElementById('modal-time'),
             modalBodyFrame: document.getElementById('modal-body-frame'),
             modalBodyFallback: document.getElementById('modal-body-fallback'),
-            toast: document.getElementById('toast-notification')
+            toast: document.getElementById('toast-notification'),
+
+            // 100% Celebration Elements
+            celebrationModal: document.getElementById('celebration-modal'),
+            celebrationDoorPanel: document.getElementById('celebration-door-panel'),
+            celebrationOpenPortalBtn: document.getElementById('celebration-open-portal-btn'),
+            celebrationCloseBtn: document.getElementById('celebration-close-btn')
         };
+
+        // Setup Bamboocopter Custom Follower Cursor
+        const cursor = document.getElementById('bamboocopter-cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.display = 'block';
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursor.style.display = 'none';
+        });
+
+        // Speed up the Bamboocopter propeller when hovering clickables
+        const addCursorHoverSpeed = () => cursor.classList.add('hover-active');
+        const removeCursorHoverSpeed = () => cursor.classList.remove('hover-active');
+
+        const scanClickables = () => {
+            document.querySelectorAll('a, button, input, textarea, select, [role="button"], th, td, tr').forEach(item => {
+                item.addEventListener('mouseenter', addCursorHoverSpeed);
+                item.addEventListener('mouseleave', removeCursorHoverSpeed);
+            });
+        };
+        scanClickables();
 
         let lastResults = [];
         let showSpamEmails = false; // Spam hidden by default
+        let stopConfettiFn = null;  // Keeps track of the animation frame canvas loop
+
+        // Custom Text-To-Speech function using browser native speechSynthesis
+        function speakInboxPortal() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Terminate ongoing voice streams
+                const utterance = new SpeechSynthesisUtterance("One hundred percent inbox! Anywhere Door portal activated!");
+                utterance.pitch = 1.35; // Playful, higher pitched tone reminiscent of Doraemon!
+                utterance.rate = 1.05;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Lightweight Confetti Canvas Particle System for Celebration Background
+        function runConfetti() {
+            const canvas = document.getElementById('celebration-confetti');
+            const ctx = canvas.getContext('2d');
+            let animationId;
+            
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            const colors = ['#00A0E9', '#FFD400', '#E60012', '#FFFFFF', '#FF5A92'];
+            const particles = Array.from({ length: 90 }).map(() => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                r: Math.random() * 6 + 4,
+                d: Math.random() * canvas.height,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                tilt: Math.random() * 10 - 5,
+                tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+                tiltAngle: 0
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, idx) => {
+                    p.tiltAngle += p.tiltAngleIncremental;
+                    p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                    p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+                    if (p.y > canvas.height) {
+                        p.x = Math.random() * canvas.width;
+                        p.y = -20;
+                        p.tilt = Math.random() * 10 - 5;
+                    }
+
+                    ctx.beginPath();
+                    ctx.lineWidth = p.r;
+                    ctx.strokeStyle = p.color;
+                    ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                    ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                    ctx.stroke();
+                });
+                animationId = requestAnimationFrame(draw);
+            }
+            draw();
+            return () => cancelAnimationFrame(animationId);
+        }
+
+        // Trigger the 100% Match celebration popup
+        function triggerCelebrationPopup() {
+            // Display Modal with quick state changes
+            dom.celebrationModal.classList.remove('hidden');
+            dom.celebrationDoorPanel.classList.remove('door-open-animation'); // Reset first
+            
+            setTimeout(() => {
+                dom.celebrationModal.classList.remove('opacity-0');
+            }, 50);
+
+            // Animate 3D swinging Anywhere Door open after 800ms
+            setTimeout(() => {
+                dom.celebrationDoorPanel.classList.add('door-open-animation');
+            }, 800);
+
+            // Play voice and confetti loop
+            speakInboxPortal();
+            if (stopConfettiFn) stopConfettiFn();
+            stopConfettiFn = runConfetti();
+            scanClickables();
+        }
 
         async function getAccess(refreshToken) {
             const res = await fetch('https://oauth2.googleapis.com/token', {
@@ -363,7 +797,6 @@
                 return decodeBase64(payload.body.data);
             }
             if (payload.parts) {
-                // Prioritize rich html, then plain text
                 let htmlPart = payload.parts.find(p => p.mimeType === 'text/html');
                 if (htmlPart && htmlPart.body && htmlPart.body.data) {
                     return decodeBase64(htmlPart.body.data);
@@ -372,7 +805,6 @@
                 if (plainPart && plainPart.body && plainPart.body.data) {
                     return decodeBase64(plainPart.body.data);
                 }
-                // Recursive lookup loop
                 for (let part of payload.parts) {
                     let recursiveResult = extractGmailBody(part);
                     if (recursiveResult) return recursiveResult;
@@ -400,13 +832,11 @@
                     const headers = msgData.payload.headers;
                     const subject = headers.find(h => h.name === 'Subject')?.value || "(Empty Subject)";
                     
-                    // Exact local timestamp setups
                     const dateRaw = headers.find(h => h.name === 'Date')?.value || "";
                     const dateObj = new Date(dateRaw);
                     const date = isNaN(dateObj) ? "" : dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
                     const time = isNaN(dateObj) ? "" : dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: true });
 
-                    // Raw Content extracts for sandbox previews
                     const snippet = msgData.snippet || "";
                     let parsedBody = "";
                     try {
@@ -415,7 +845,6 @@
                         parsedBody = snippet;
                     }
 
-                    // Retrieve tags/labels to register landing folder pathing
                     const labels = msgData.labelIds || [];
                     let landing = 'OTHER';
                     if (labels.includes('SPAM')) {
@@ -445,7 +874,6 @@
             const accountMaps = results.reduce((acc, curr) => {
                 if (!acc[curr.accName]) acc[curr.accName] = new Set();
                 curr.subjects.forEach(s => {
-                    // STRICT RULE: Only map/count subjects that landed successfully in the INBOX (exclude SPAM)
                     if (s.landing !== 'SPAM') {
                         acc[curr.accName].add(s.subject);
                     }
@@ -458,7 +886,7 @@
 
             if (accountNames.length < totalAccounts) {
                 dom.percent.textContent = "...";
-                dom.commonInput.value = "Finalizing data processing sequence...";
+                dom.commonInput.value = "Scanning parallel networks...";
                 return;
             }
 
@@ -484,16 +912,15 @@
                 dom.percent.className = "text-2xl font-black text-emerald-400 italic";
             } else {
                 if (topCount > 1) {
-                    dom.commonInput.value = `Partial Match: "${topSubject}"`;
-                    dom.percent.className = "text-2xl font-black text-indigo-400 italic";
+                    dom.commonInput.value = `Partial Convergence: "${topSubject}"`;
+                    dom.percent.className = "text-2xl font-black text-[#00A0E9] italic";
                 } else {
-                    dom.commonInput.value = "No shared subject lines detected inside this sequence.";
+                    dom.commonInput.value = "No shared subject lines detected across monitored space.";
                     dom.percent.textContent = "0%";
                     dom.percent.className = "text-2xl font-black text-slate-500 italic";
                 }
             }
 
-            // NEW RULE: Show the preview trigger if email data is successfully retrieved in Muskan's node (musk9090)
             const muskanAccountName = "musk9090";
             const muskanResult = results.find(item => item.accName === muskanAccountName);
             const hasMuskanMails = muskanResult && muskanResult.subjects && muskanResult.subjects.length > 0;
@@ -501,20 +928,24 @@
             if (hasMuskanMails) {
                 dom.previewTrigger.classList.remove('hidden');
                 
-                // Adjust description depending on match status
                 if (topCount === totalAccounts) {
-                    dom.previewTriggerTitle.textContent = "100% Convergence Match Achieved";
-                    dom.previewTriggerDesc.innerHTML = `Payload verified across all network nodes. Preview is pulled strictly from <strong class="text-indigo-400">Muskan Sharma</strong> (musk9090).`;
+                    dom.previewTriggerTitle.textContent = "100% Anywhere Door Link Established";
+                    dom.previewTriggerDesc.innerHTML = `All nodes have synchronized. Open the Anywhere Door directly from <strong class="text-[#00A0E9]">Muskan Sharma</strong> (musk9090).`;
                 } else {
-                    dom.previewTriggerTitle.textContent = "Mail Detected in Muskan's Account";
-                    dom.previewTriggerDesc.innerHTML = `Mail landed successfully on <strong class="text-indigo-400">Muskan Sharma's</strong> node (musk9090). Active preview is available for analysis.`;
+                    dom.previewTriggerTitle.textContent = "Mail Portal Available";
+                    dom.previewTriggerDesc.innerHTML = `Mail found on <strong class="text-[#00A0E9]">Muskan Sharma's</strong> node (musk9090). You can now step through the Anywhere Door.`;
                 }
             } else {
                 dom.previewTrigger.classList.add('hidden');
             }
 
-            // Calculate Spam visibility counters to configure toggle visibility
             updateSpamCounterUI();
+            scanClickables();
+
+            // EXPLICIT CELEBRATION TRIGGER: Play popup when 100% convergence rate achieves
+            if (matchRate === 100) {
+                triggerCelebrationPopup();
+            }
         }
 
         function updateSpamCounterUI() {
@@ -529,7 +960,6 @@
                 dom.toggleSpamBtn.classList.add('hidden');
             }
 
-            // Sync visual status of spam elements to global view state variables
             spamElements.forEach(el => {
                 if (showSpamEmails) {
                     el.classList.remove('hidden');
@@ -541,26 +971,25 @@
 
         function renderRow(accName, domain, subjects) {
             const row = document.createElement('tr');
-            row.className = "hover:bg-indigo-500/[0.03] transition-colors group animate-slide";
+            row.className = "hover:bg-[#00A0E9]/[0.03] transition-colors group animate-slide";
             
-            // Highlight Muskan Sharma account specifically in UI
             const isMuskan = (accName === 'musk9090');
             const accountLabel = isMuskan 
-                ? `<span class="text-indigo-400 font-black text-sm tracking-tight flex items-center gap-1.5"><i class="fa-solid fa-star text-xs text-amber-400 animate-pulse"></i>${accName}</span>` 
+                ? `<span class="text-[#00A0E9] font-black text-sm tracking-tight flex items-center gap-1.5"><i class="fa-solid fa-star text-xs text-[#FFD400] animate-pulse"></i>${accName}</span>` 
                 : `<span class="text-slate-200 font-black text-sm tracking-tight">${accName}</span>`;
 
             const hasData = subjects && subjects.length > 0;
             const statusHtml = hasData 
-                ? `<div class="flex items-center gap-1.5 justify-end text-[9px] font-black text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">VERIFIED INTERACTION</div>`
+                ? `<div class="flex items-center gap-1.5 justify-end text-[9px] font-black text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">VERIFIED GATEWAY</div>`
                 : subjects === null 
-                ? `<div class="flex items-center gap-1.5 justify-end text-[9px] font-black text-rose-400 bg-rose-400/10 px-3 py-1.5 rounded-full border border-rose-400/20 text-center">AUTH EXPIRED</div>`
-                : `<div class="flex items-center gap-1.5 justify-end text-[9px] font-black text-slate-500 bg-slate-800 px-3 py-1.5 rounded-full">NO DATA RETRIEVED</div>`;
+                ? `<div class="flex items-center gap-1.5 justify-end text-[9px] font-black text-[#E60012] bg-[#E60012]/10 px-3 py-1.5 rounded-full border border-[#E60012]/20 text-center">BATTERY DEPLETED</div>`
+                : `<div class="flex items-center gap-1.5 justify-end text-[9px] font-black text-slate-500 bg-slate-800 px-3 py-1.5 rounded-full">EMPTY STREAM</div>`;
 
             let subjectsHtml = '';
             if (subjects === null) {
-                subjectsHtml = `<span class="text-rose-400/80 text-xs font-bold">Please update authentication tokens for ${accName}</span>`;
+                subjectsHtml = `<span class="text-[#E60012] text-xs font-bold">Pocket link broken for ${accName}. Update authentication tokens.</span>`;
             } else if (subjects.length === 0) {
-                subjectsHtml = `<span class="text-slate-700 text-xs italic font-medium">Domain match not identified in last inbox scans</span>`;
+                subjectsHtml = `<span class="text-slate-600 text-xs italic font-semibold">Subject not identified in active inbox sectors</span>`;
             } else {
                 subjectsHtml = subjects.map((s, i) => {
                     let badgeColor = "bg-slate-500/10 text-slate-400 border border-slate-500/20";
@@ -571,7 +1000,7 @@
                         badgeColor = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
                         folderIcon = "fa-inbox";
                     } else if (s.landing === 'SPAM') {
-                        badgeColor = "bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                        badgeColor = "bg-[#E60012]/10 text-[#E60012] border border-[#E60012]/20";
                         folderIcon = "fa-triangle-exclamation";
                         isSpam = true;
                     } else if (s.landing === 'PROMOTIONS') {
@@ -591,16 +1020,16 @@
                     const spamClass = isSpam ? 'mail-item-spam hidden' : '';
 
                     return `
-                        <div class="mail-item ${spamClass} flex flex-col md:flex-row md:items-center justify-between gap-3 mb-2 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/60 text-xs hover:border-indigo-500/30 transition-all">
+                        <div class="mail-item ${spamClass} flex flex-col md:flex-row md:items-center justify-between gap-3 mb-2 p-3 rounded-2xl bg-[#030d1a]/80 border border-[#00A0E9]/10 text-xs hover:border-[#00A0E9]/40 transition-all">
                             <div class="flex items-center gap-3 overflow-hidden">
-                                <span class="w-5 h-5 flex-shrink-0 flex items-center justify-center text-[8px] font-black bg-slate-800 text-slate-400 rounded-md">${i+1}</span>
-                                <span class="text-slate-100 font-bold truncate max-w-[280px]">${s.subject}</span>
+                                <span class="w-5 h-5 flex-shrink-0 flex items-center justify-center text-[8px] font-black bg-[#07192e] text-[#00A0E9] rounded-md">${i+1}</span>
+                                <span class="text-slate-200 font-bold truncate max-w-[280px]">${s.subject}</span>
                             </div>
                             <div class="flex items-center gap-2 flex-shrink-0 justify-end">
                                 <span class="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded ${badgeColor}">
                                     <i class="fa-solid ${folderIcon} text-[8px]"></i> ${s.landing}
                                 </span>
-                                <span class="text-[10px] font-bold text-indigo-400 flex-shrink-0 italic">${s.date} @ ${s.time}</span>
+                                <span class="text-[10px] font-bold text-[#FFD400] flex-shrink-0 italic">${s.date} @ ${s.time}</span>
                             </div>
                         </div>
                     `;
@@ -609,7 +1038,7 @@
 
             row.innerHTML = `
                 <td class="px-8 py-5">${accountLabel}</td>
-                <td class="px-8 py-5"><span class="text-white font-mono text-xs font-black">${domain}</span></td>
+                <td class="px-8 py-5"><span class="text-[#FFD400] font-mono text-xs font-black">${domain}</span></td>
                 <td class="px-8 py-5">${subjectsHtml}</td>
                 <td class="px-8 py-5 text-right">${statusHtml}</td>
             `;
@@ -622,18 +1051,16 @@
             const spamElements = document.querySelectorAll('.mail-item-spam');
 
             if (showSpamEmails) {
-                // Showing Spam
-                dom.toggleSpamIcon.className = "fa-solid fa-eye text-rose-400 animate-pulse";
+                dom.toggleSpamIcon.className = "fa-solid fa-eye text-[#E60012] animate-pulse";
                 dom.toggleSpamText.textContent = "Hide Spam Mails";
                 dom.spamCounter.textContent = `${spamElements.length} Revealed`;
-                dom.spamCounter.className = "bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px]";
+                dom.spamCounter.className = "bg-[#E60012]/20 text-red-300 border border-[#E60012]/30 px-2 py-0.5 rounded text-[10px]";
                 spamElements.forEach(el => el.classList.remove('hidden'));
             } else {
-                // Hiding Spam
                 dom.toggleSpamIcon.className = "fa-solid fa-eye-slash text-slate-500";
                 dom.toggleSpamText.textContent = "Show Spam Mails";
                 dom.spamCounter.textContent = `${spamElements.length} Hidden`;
-                dom.spamCounter.className = "bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded text-[10px]";
+                dom.spamCounter.className = "bg-[#E60012]/10 text-red-400 border border-[#E60012]/20 px-2 py-0.5 rounded text-[10px]";
                 spamElements.forEach(el => el.classList.add('hidden'));
             }
         });
@@ -644,12 +1071,12 @@
             if (domains.length === 0) return;
 
             dom.sync.disabled = true;
-            dom.sync.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i><span class="tracking-widest">PROBING DATA NODE...</span>`;
+            dom.sync.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i><span class="tracking-widest">PROPELING TIMELINES...</span>`;
             dom.empty.classList.add('hidden');
             dom.table.classList.remove('hidden');
             dom.clear.classList.remove('hidden');
             dom.commonSec.classList.remove('hidden');
-            dom.previewTrigger.classList.add('hidden'); // Hide preview until check completes
+            dom.previewTrigger.classList.add('hidden');
             dom.body.innerHTML = '';
             lastResults = [];
 
@@ -672,7 +1099,8 @@
 
             calculateCommonality(lastResults);
             dom.sync.disabled = false;
-            dom.sync.innerHTML = `<i class="fa-solid fa-bolt-lightning"></i><span class="tracking-widest uppercase">Sync Network</span>`;
+            dom.sync.innerHTML = `<i class="fa-solid fa-bolt-lightning"></i><span class="tracking-widest uppercase">Activate Pocket Sync</span>`;
+            scanClickables();
         });
 
         // Show Toast Notification if Muskan Preview is unavailable
@@ -689,10 +1117,7 @@
         dom.showPreviewBtn.addEventListener('click', () => {
             if (lastResults.length === 0) return;
 
-            // Grab the matching top subject value
             const targetSubject = dom.commonInput.value;
-            
-            // Search inside records SPECIFICALLY for Muskan Sharma's account ("musk9090")
             const muskanAccountName = "musk9090";
             const muskanResult = lastResults.find(item => item.accName === muskanAccountName);
 
@@ -701,8 +1126,6 @@
                 return;
             }
 
-            // Find a mail that matches the top common subject.
-            // If none matches (or match is less than 100%), fallback to Muskan's latest retrieved email.
             let matchedEmail = muskanResult.subjects.find(s => s.subject === targetSubject);
             if (!matchedEmail && muskanResult.subjects.length > 0) {
                 matchedEmail = muskanResult.subjects[0];
@@ -713,12 +1136,10 @@
                 dom.modalAccount.textContent = "musk9090 (Muskan Sharma)";
                 dom.modalTime.textContent = `${matchedEmail.date} @ ${matchedEmail.time}`;
 
-                // Check if rich HTML content or plain snippet is available
                 if (matchedEmail.body && matchedEmail.body.includes('<')) {
                     dom.modalBodyFallback.classList.add('hidden');
                     dom.modalBodyFrame.classList.remove('hidden');
 
-                    // INJECT CSS BLOCK: Complete prevention of link hover states and click events inside the iframe
                     const disableLinkInteractionsCSS = `
                         <style>
                             a, a *, [href], [onclick], button, input[type="submit"] {
@@ -732,22 +1153,19 @@
                 } else {
                     dom.modalBodyFrame.classList.add('hidden');
                     dom.modalBodyFallback.classList.remove('hidden');
-                    dom.modalBodyFallback.textContent = matchedEmail.body || matchedEmail.snippet || "No HTML body structure parsed.";
+                    dom.modalBodyFallback.textContent = matchedEmail.body || matchedEmail.snippet || "No Anywhere Door HTML body parsed.";
                 }
 
-                // Open modal with smooth transitions
                 dom.previewModal.classList.remove('hidden');
                 setTimeout(() => {
                     dom.previewModal.classList.remove('opacity-0');
                     dom.previewModal.querySelector('div').classList.remove('scale-95');
                 }, 50);
             } else {
-                // Muskan's node loaded but does not contain a previewable subject line
                 showToast();
             }
         });
 
-        // Close preview modal controller
         const hidePreviewModal = () => {
             dom.previewModal.classList.add('opacity-0');
             dom.previewModal.querySelector('div').classList.add('scale-95');
@@ -762,9 +1180,30 @@
             if (e.target === dom.previewModal) hidePreviewModal();
         });
 
+        // Close Celebration Modal
+        const closeCelebrationModal = () => {
+            dom.celebrationModal.classList.add('opacity-0');
+            setTimeout(() => {
+                dom.celebrationModal.classList.add('hidden');
+                if (stopConfettiFn) {
+                    stopConfettiFn();
+                    stopConfettiFn = null;
+                }
+            }, 500);
+        };
+
+        dom.celebrationCloseBtn.addEventListener('click', closeCelebrationModal);
+        dom.celebrationOpenPortalBtn.addEventListener('click', () => {
+            closeCelebrationModal();
+            // Automatically open Anywhere Door Mail Preview modal
+            setTimeout(() => {
+                dom.showPreviewBtn.click();
+            }, 300);
+        });
+
         dom.copy.addEventListener('click', () => {
             const val = dom.commonInput.value;
-            if (val && !val.includes('No shared') && !val.includes('Analyzing') && !val.includes('Finalizing')) {
+            if (val && !val.includes('No shared') && !val.includes('Analyzing') && !val.includes('Scanning')) {
                 const el = document.createElement("textarea");
                 el.value = val;
                 document.body.appendChild(el);
@@ -774,10 +1213,10 @@
                 
                 const originalIcon = dom.copy.innerHTML;
                 dom.copy.innerHTML = `<i class="fa-solid fa-check"></i>`;
-                dom.copy.className = dom.copy.className.replace('bg-indigo-600', 'bg-emerald-600');
+                dom.copy.className = dom.copy.className.replace('bg-[#00A0E9]', 'bg-emerald-600');
                 setTimeout(() => {
                     dom.copy.innerHTML = originalIcon;
-                    dom.copy.className = dom.copy.className.replace('bg-emerald-600', 'bg-indigo-600');
+                    dom.copy.className = dom.copy.className.replace('bg-emerald-600', 'bg-[#00A0E9]');
                 }, 2000);
             }
         });
